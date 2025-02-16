@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 import altair as alt
 from PIL import Image
 
@@ -36,3 +37,19 @@ def DNA_nucleotide_count(seq):
 X=DNA_nucleotide_count(sequence)
 X
 st.subheader('2. Print text')
+df =pd.DataFrame.from_dict(X,orient='index')
+df=df.rename({0:'count'},axis='columns')
+df.reset_index(inplace=True)
+df=df.rename(columns={'index':'nucleotide'})
+st.write(df)
+
+st.subheader('4. Display Bar chart')
+plt.hist(X,5)
+p = alt.Chart(df).mark_bar().encode(
+    x='nucleotide',
+    y='count'
+)
+p = p.properties(
+    width=alt.Step(80)  # controls width of bar.
+)
+st.write(p)
